@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const errorHandlingMiddleware = require('./middleware/error-handler');
 const notFoundMiddleware = require('./middleware/not-found');
 const connectDB = require('./db/connect');
+const authRouter = require('./routes/auth-routes');
 
 const app = express();
 
@@ -17,6 +18,8 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('Hello there!');
 });
+
+app.use('/api/v1/auth', authRouter);
 
 app.use(errorHandlingMiddleware);
 app.use(notFoundMiddleware);
