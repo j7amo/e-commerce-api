@@ -29,7 +29,7 @@ const registerController = async (req, res) => {
   });
 
   // eslint-disable-next-line no-underscore-dangle
-  const tokenPayload = { userId: user._id, name: user.name, role: user.name };
+  const tokenPayload = { userId: user._id, name: user.name, role: user.role };
 
   // const token = createJWT({ payload: tokenPayload });
 
@@ -50,6 +50,7 @@ const registerController = async (req, res) => {
 
 const loginController = async (req, res) => {
   console.log(req.cookies);
+  console.log(req.signedCookies);
   res.status(StatusCodes.OK).send('login');
 };
 

@@ -14,7 +14,8 @@ const port = process.env.PORT || 3000;
 
 // add logging
 app.use(morgan('tiny')); // this results in "GET /apples 404 20 - 3.515 ms"
-app.use(cookieParser());
+// in order to sign cookies when must pass the secret
+app.use(cookieParser(process.env.JWT_SECRET));
 app.use(express.json());
 
 app.get('/', (req, res) => {
