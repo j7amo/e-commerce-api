@@ -84,7 +84,7 @@ const loginController = async (req, res) => {
   const tokenPayload = { userId: user._id, name: user.name, role: user.role };
   attachCookiesToResponse({ res, tokenPayload });
 
-  res.status(StatusCodes.OK).send({ user: tokenPayload });
+  res.status(StatusCodes.OK).json({ user: tokenPayload });
 };
 
 const logoutController = async (req, res) => {

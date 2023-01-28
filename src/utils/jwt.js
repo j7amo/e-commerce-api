@@ -11,7 +11,7 @@ const createJWT = ({ payload }) => jwt.sign(payload, process.env.JWT_SECRET, {
 // 2) destructure what we need.
 // 3) pass arguments as an object.
 // This way we don't need to worry about ORDER OF THE ARGUMENTS.
-const isValidToken = ({ token }) => jwt.verify(token, process.env.JWT_SECRET);
+const decodeTokenPayload = ({ token }) => jwt.verify(token, process.env.JWT_SECRET);
 
 const attachCookiesToResponse = ({ res, tokenPayload }) => {
   const token = createJWT({ payload: tokenPayload });
@@ -27,6 +27,6 @@ const attachCookiesToResponse = ({ res, tokenPayload }) => {
 
 module.exports = {
   createJWT,
-  isValidToken,
+  decodeTokenPayload,
   attachCookiesToResponse,
 };
