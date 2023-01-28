@@ -39,10 +39,14 @@ const registerController = async (req, res) => {
 
   // res.status(StatusCodes.CREATED).json({ user: tokenPayload, token });
 
-  // 2) Another option is to use cookies. Which is a more secure way of
-  // storing the token. We can straight away set expiration time,
-  // access by HTTP only (which means that cookie is not stored/accessed via JS so
-  // this makes cookie data less vulnerable than localStorage data to JavaScript-based attacks.):
+  // 2) Another option is to use COOKIES.
+  // Main POINTS about them are:
+  // - cookie is MORE SECURE way of storing token because it is NOT ACCESSIBLE via JS(if we
+  // set up the "httpOnly" flag), which makes cookie data LESS VULNERABLE THAN "localStorage"
+  // data to JavaScript-based attacks.
+  // - we don't have to set up JS code on the client for storing/retrieving token
+  // from "localStorage" because IT'S BROWSER's WORK now(IMPORTANT: it works only for the
+  // SAME DOMAIN)
   attachCookiesToResponse({ res, tokenPayload });
 
   res.status(StatusCodes.CREATED).json({ user: tokenPayload });
@@ -77,7 +81,16 @@ const loginController = async (req, res) => {
 };
 
 const logoutController = async (req, res) => {
-  res.status(StatusCodes.OK).send('logout');
+  // When user logs out we need to set 'token' cookie value to some value
+  // that will not match anymore (it will not hold token anymore).
+  // We can go here with ANY string value literally:
+  res.cookie('token', 'logout', {
+    // we can set it to expire instantly (or we can do something like Date.now() + 5000)
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
+
+  res.status(StatusCodes.OK).json({ msg: 'logout' });
 };
 
 module.exports = {
