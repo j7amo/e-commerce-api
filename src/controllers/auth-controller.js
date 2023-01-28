@@ -45,8 +45,15 @@ const registerController = async (req, res) => {
   // set up the "httpOnly" flag), which makes cookie data LESS VULNERABLE THAN "localStorage"
   // data to JavaScript-based attacks.
   // - we don't have to set up JS code on the client for storing/retrieving token
-  // from "localStorage" because IT'S BROWSER's WORK now(IMPORTANT: it works only for the
-  // SAME DOMAIN)
+  // from "localStorage" because IT'S BROWSER's WORK now. IMPORTANT: it works only for the
+  // (1)SAME DOMAIN AND (2)SAME PORT SIMULTANEOUSLY - if PORTS and/or DOMAINS
+  // of the server and client are different, then such a request from the client will not contain
+  // cookies! In our case we have a client written with the help of Create React App.
+  // And in order to fix this cookies issue we can use one of CRA features: "PROXYING".
+  // In order to use it we just add "proxy": "http://localhost:3333" to client's "package.json".
+  // Keep in mind that this is a viable option ONLY FOR DEVELOPMENT!
+  // After app is deployed to some hosting service then we need to use the service documentation
+  // on how to set up the PROXYING/REDIRECTING.
   attachCookiesToResponse({ res, tokenPayload });
 
   res.status(StatusCodes.CREATED).json({ user: tokenPayload });
