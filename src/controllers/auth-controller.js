@@ -49,9 +49,31 @@ const registerController = async (req, res) => {
 };
 
 const loginController = async (req, res) => {
-  console.log(req.cookies);
-  console.log(req.signedCookies);
-  res.status(StatusCodes.OK).send('login');
+  const {
+    body: { email, password },
+  } = req;
+
+  if (!email || !password) {
+    throw new CustomError.BadRequestError('Please provide email and password');
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new CustomError.UnauthenticatedError('Invalid credentials');
+  }
+
+  const isPasswordCorrect = await user.comparePasswords(password);
+
+  if (!isPasswordCorrect) {
+    throw new CustomError.UnauthenticatedError('Invalid password');
+  }
+
+  // eslint-disable-next-line no-underscore-dangle
+  const tokenPayload = { userId: user._id, name: user.name, role: user.role };
+  attachCookiesToResponse({ res, tokenPayload });
+
+  res.status(StatusCodes.OK).send({ user: tokenPayload });
 };
 
 const logoutController = async (req, res) => {
