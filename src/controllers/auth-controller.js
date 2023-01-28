@@ -1,7 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors/index');
 const User = require('../models/User');
-const { createJWT } = require('../utils/index');
+const { attachCookiesToResponse } = require('../utils/index');
 
 const registerController = async (req, res) => {
   const { email, name, password } = req.body;
@@ -31,12 +31,25 @@ const registerController = async (req, res) => {
   // eslint-disable-next-line no-underscore-dangle
   const tokenPayload = { userId: user._id, name: user.name, role: user.name };
 
-  const token = createJWT({ payload: tokenPayload });
+  // const token = createJWT({ payload: tokenPayload });
 
-  res.status(StatusCodes.CREATED).json({ user: tokenPayload, token });
+  // when sending back the token we have 2 major options:
+  // 1) We send the token via JSON to be used by JavaScript on the client.
+  // Which basically means that it will be taken and stored in the "localStorage":
+
+  // res.status(StatusCodes.CREATED).json({ user: tokenPayload, token });
+
+  // 2) Another option is to use cookies. Which is a more secure way of
+  // storing the token. We can straight away set expiration time,
+  // access by HTTP only (which means that cookie is not stored/accessed via JS so
+  // this makes cookie data less vulnerable than localStorage data to JavaScript-based attacks.):
+  attachCookiesToResponse({ res, tokenPayload });
+
+  res.status(StatusCodes.CREATED).json({ user: tokenPayload });
 };
 
 const loginController = async (req, res) => {
+  console.log(req.cookies);
   res.status(StatusCodes.OK).send('login');
 };
 

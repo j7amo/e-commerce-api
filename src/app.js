@@ -2,6 +2,7 @@ require('dotenv').config();
 require('express-async-errors');
 const express = require('express');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 const errorHandlingMiddleware = require('./middleware/error-handler');
 const notFoundMiddleware = require('./middleware/not-found');
 const connectDB = require('./db/connect');
@@ -13,6 +14,7 @@ const port = process.env.PORT || 3000;
 
 // add logging
 app.use(morgan('tiny')); // this results in "GET /apples 404 20 - 3.515 ms"
+app.use(cookieParser());
 app.use(express.json());
 
 app.get('/', (req, res) => {
