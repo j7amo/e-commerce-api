@@ -5,9 +5,13 @@ const {
   decodeTokenPayload,
   attachCookiesToResponse,
 } = require('./jwt');
+const createTokenPayload = require('./createTokenPayload');
+const checkPermissions = require('./checkPermissions');
 
 module.exports = {
   createJWT,
   decodeTokenPayload,
   attachCookiesToResponse,
+  createTokenPayload,
+  checkPermissions,
 };

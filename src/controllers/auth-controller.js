@@ -1,7 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors/index');
 const User = require('../models/User');
-const { attachCookiesToResponse } = require('../utils/index');
+const { attachCookiesToResponse, createTokenPayload } = require('../utils');
 
 const registerController = async (req, res) => {
   const { email, name, password } = req.body;
@@ -29,7 +29,7 @@ const registerController = async (req, res) => {
   });
 
   // eslint-disable-next-line no-underscore-dangle
-  const tokenPayload = { userId: user._id, name: user.name, role: user.role };
+  const tokenPayload = createTokenPayload(user);
 
   // const token = createJWT({ payload: tokenPayload });
 
@@ -81,7 +81,7 @@ const loginController = async (req, res) => {
   }
 
   // eslint-disable-next-line no-underscore-dangle
-  const tokenPayload = { userId: user._id, name: user.name, role: user.role };
+  const tokenPayload = createTokenPayload(user);
   attachCookiesToResponse({ res, tokenPayload });
 
   res.status(StatusCodes.OK).json({ user: tokenPayload });

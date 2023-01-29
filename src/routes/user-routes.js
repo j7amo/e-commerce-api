@@ -32,6 +32,6 @@ router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword);
 // 1) will match "/:id".
 // 2) "id" path param will have a value of "showMe".
 // 3) 99% that we will not be able to find a user with such an ID.
-router.route('/:id').get(getSingleUser);
+router.route('/:id').get(authenticateUser, getSingleUser);
 
 module.exports = router;
