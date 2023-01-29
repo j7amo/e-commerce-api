@@ -6,11 +6,22 @@ const {
   updateUser,
   updateUserPassword,
 } = require('../controllers/user-controller');
-const authenticateUser = require('../middleware/authentication');
+const {
+  authenticationMiddleware: authenticateUser,
+  authorizePermissions,
+} = require('../middleware/authentication');
 
 const router = express.Router();
 
-router.route('/').get(authenticateUser, getAllUsers);
+// We want to grant the permission to get all users to ADMIN ONLY.
+// In order to do it we use additional middleware for this resource.
+router
+  .route('/')
+  // IMPORTANT: the order of middlewares matters. We want "authorizePermissions"
+  // go after "authenticateUser". Why? Because "authorizePermissions" needs
+  // a "user" property on "req" object. And "authenticateUser" middleware
+  // does add this property if token is valid.
+  .get(authenticateUser, authorizePermissions('admin'), getAllUsers);
 router.route('/showMe').get(authenticateUser, showCurrentUser);
 router.route('/updateUser').patch(authenticateUser, updateUser);
 router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword);
