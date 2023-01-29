@@ -45,6 +45,7 @@ const ProductSchema = new mongoose.Schema(
     },
     colors: {
       type: [String],
+      default: ['#222'],
       required: true,
     },
     featured: {
@@ -65,7 +66,7 @@ const ProductSchema = new mongoose.Schema(
       default: 0,
     },
     user: {
-      type: mongoose.Types.ObjectID,
+      type: mongoose.Types.ObjectId,
       ref: 'User',
       required: true,
     },
