@@ -22,7 +22,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide password'],
     minLength: 6,
-    maxLength: 20,
   },
   role: {
     type: String,
@@ -32,6 +31,10 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.pre('save', async function () {
+  // this check helps us to avoid unnecessary password re-hashing,
+  // because if we re-hash password on every document save, then
+  // after just one of such re-hashes credentials will not match anymore
+  if (!this.isModified('password')) return;
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
