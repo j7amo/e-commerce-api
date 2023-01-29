@@ -1,4 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
+const path = require('path');
 const Product = require('../models/Product');
 const CustomError = require('../errors');
 
@@ -70,7 +71,33 @@ const deleteProduct = async (req, res) => {
 };
 
 const uploadImage = async (req, res) => {
-  res.status(StatusCodes.OK).send('image uploaded');
+  // when uploading an image we:
+  // 1) check if user attached a file in the first place
+  if (!req.files) {
+    throw new CustomError.BadRequestError('No file uploaded');
+  }
+
+  const productImage = req.files.image;
+
+  // 2) check if the attached file has correct mimetype (which basically helps
+  // us understand if it is an image or not)
+  if (!productImage.mimetype.startsWith('image')) {
+    throw new CustomError.BadRequestError('Please upload image');
+  }
+
+  const maxSize = 1024 * 1024;
+
+  // 3) check filesize (we don't want to allow giant files to be uploaded to the server)
+  if (productImage.size > maxSize) {
+    throw new CustomError.BadRequestError('Please upload image smaller 1MB');
+  }
+
+  // 4) physically place file to the "/uploads" folder
+  await productImage.mv(
+    path.resolve(__dirname, `../../public/uploads/${productImage.name}`),
+  );
+
+  res.status(StatusCodes.OK).json({ image: `/uploads/${productImage.name}` });
 };
 
 module.exports = {
