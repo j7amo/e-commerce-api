@@ -19,6 +19,6 @@ router
   .route('/:id')
   .get(getSingleReview)
   .patch(authenticationMiddleware, updateReview)
-  .patch(authenticationMiddleware, deleteReview);
+  .delete(authenticationMiddleware, deleteReview);
 
 module.exports = router;
