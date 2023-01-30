@@ -76,6 +76,12 @@ const deleteProduct = async (req, res) => {
     );
   }
 
+  // Why do we use "product.remove" instead of just using "Product.findOneAndRemove"?
+  // Well, we have reviews associated with the product. If we remove the product
+  // we also want to remove all the reviews associated with it! How can we do it?
+  // We can set up "PRE-REMOVE" HOOK in "Product" model. This hook will be triggered
+  // on "product.remove" (and WILL NOT BE TRIGGERED on "Product.findOneAndRemove"
+  // which we don't want)
   await product.remove();
 
   res.status(StatusCodes.OK).json({ msg: 'Product removed' });

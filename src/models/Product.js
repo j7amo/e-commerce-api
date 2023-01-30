@@ -93,4 +93,10 @@ ProductSchema.virtual('reviews', {
   // match: { rating: 5 },
 });
 
+// set up "PRE-REMOVE" HOOK for removal of all the reviews associated with this product:
+ProductSchema.pre('remove', async function () {
+  // eslint-disable-next-line no-underscore-dangle
+  await this.model('Review').deleteMany({ product: this._id });
+});
+
 module.exports = mongoose.model('Product', ProductSchema);
