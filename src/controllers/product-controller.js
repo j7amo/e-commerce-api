@@ -4,7 +4,15 @@ const Product = require('../models/Product');
 const CustomError = require('../errors');
 
 const getAllProducts = async (req, res) => {
-  const products = await Product.find({});
+  // If we want to use "populate" when querying for document
+  // from "Products" collection then we need additional setup
+  // because "Product" model DOES NOT HAVE "reviews" "path"
+  // stored in MongoDB in the document. To solve this we need
+  // to set up a virtual in the "Product" model(please see the model file).
+  const products = await Product.find({}).populate({
+    path: 'reviews',
+    select: 'rating title comment user',
+  });
   res.status(StatusCodes.OK).json({ products, count: products.length });
 };
 
@@ -12,7 +20,10 @@ const getSingleProduct = async (req, res) => {
   const {
     params: { id: productId },
   } = req;
-  const product = await Product.findOne({ _id: productId });
+  const product = await Product.findOne({ _id: productId }).populate({
+    path: 'reviews',
+    select: 'rating title comment user',
+  });
 
   if (!product) {
     throw new CustomError.NotFoundError(

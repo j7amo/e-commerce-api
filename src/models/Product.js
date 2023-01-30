@@ -71,7 +71,26 @@ const ProductSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true },
+  // here we enable virtuals
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } },
 );
+
+// VIRTUAL SETUP:
+// We want to set up connection between "Product" and "Review" models so that
+// when we query product we can also get all the reviews for it. In order to do it
+// we can use Mongoose virtuals. In Mongoose, a virtual is a property that is
+// NOT STORED(which helps us to avoid duplication of data) IN MongoDB but computed on-the-fly.
+ProductSchema.virtual('reviews', {
+  // we reference the model we want to set up connection to
+  ref: 'Review',
+  // we set up the connection between "localField" of the Product model
+  localField: '_id',
+  // and "foreignField" of the Review model
+  foreignField: 'product',
+  // we say that we want results in an array form
+  justOne: false,
+  // we can also add additional filters
+  // match: { rating: 5 },
+});
 
 module.exports = mongoose.model('Product', ProductSchema);

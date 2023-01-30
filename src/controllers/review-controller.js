@@ -5,12 +5,36 @@ const CustomError = require('../errors');
 const { checkPermissions } = require('../utils');
 
 const getAllReviews = async (req, res) => {
-  const reviews = await Review.find({});
+  // We can use "populate" method to reference data from other collections
+  // to show it in the query result.
+  // e.g. we can get info about product and/or user when we query for review
+  // in the "Reviews" collection. Although in reality 'Reviews' collection
+  // DOES NOT HAVE this data stored in it. This data is stored in
+  // separate collections: "Products" and "Users". In "Review" model
+  // we already have paths that we want to reference ('product', 'user').
+  // So in this case we just use "populate" and no additional setup is needed:
+  const reviews = await Review.find({})
+    .populate({
+      path: 'product',
+      select: 'name company price',
+    })
+    .populate({
+      path: 'user',
+      select: 'name email role',
+    });
   res.status(StatusCodes.OK).json({ reviews, count: reviews.length });
 };
 
 const getSingleReview = async (req, res) => {
-  const review = await Review.findOne({ _id: req.params.id });
+  const review = await Review.findOne({ _id: req.params.id })
+    .populate({
+      path: 'product',
+      select: 'name company price',
+    })
+    .populate({
+      path: 'user',
+      select: 'name email role',
+    });
 
   if (!review) {
     throw new CustomError.NotFoundError(
