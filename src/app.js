@@ -47,10 +47,7 @@ app.use(express.static(path.resolve(__dirname, '../public')));
 app.use(fileUpload());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Hello there!');
-});
-
+// routes
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/products', productsRouter);
