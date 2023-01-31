@@ -2,7 +2,7 @@ const CustomError = require('../errors/index');
 /**
  * Function checks user permission to access user resource.
  * @param requestUser - the user who makes the request
- * @param resourceUserId - the userId that user is trying get
+ * @param resourceUserId - the userId that is associated with the resource user is trying get
  */
 const checkPermissions = (requestUser, resourceUserId) => {
   const { userId, role } = requestUser;
