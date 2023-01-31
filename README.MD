@@ -1,6 +1,6 @@
 ## Hosted Project
 
-[E-Commerce API Heroku URL](https://e-commerce-api-10.herokuapp.com/)
+[E-Commerce API URL](https://e-commerce-api-hf8i.onrender.com)
 
 #### Setup Basic Express Server
 
