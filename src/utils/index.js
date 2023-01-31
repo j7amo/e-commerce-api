@@ -7,6 +7,7 @@ const {
 } = require('./jwt');
 const createTokenPayload = require('./createTokenPayload');
 const checkPermissions = require('./checkPermissions');
+const fakeStripeAPI = require('./fakeStripeAPI');
 
 module.exports = {
   createJWT,
@@ -14,4 +15,5 @@ module.exports = {
   attachCookiesToResponse,
   createTokenPayload,
   checkPermissions,
+  fakeStripeAPI,
 };
