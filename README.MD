@@ -5,7 +5,7 @@
 #### Setup Basic Express Server
 
 - [] import express and assign to variable
-- [] setup start port variable (5000) and start function
+- [] setup start port variable (3000) and start function
 
 #### Connect To DB
 
@@ -355,22 +355,8 @@
 - [] express-mongo-sanitize
 - [] cors (cookies!!!!)
 
-#### Deploy on Heroku
+#### Deploy on Render
 
-- [] heroku account and heroku cli
-- [] remove/copy from the main repo
 - [] add dev command "nodemon app.js"
 - [] change start to "node app.js"
-- [] setup node version in package.json
-- [] "engines": {"node": "14.x"}
-- [] Procfile "web: node app.js"
-- [] remove existing git repo
-- [] rm -rf .git - mac,
-- [] git init
-- [] git add .
-- [] git commit -m "initial commit"
-- [] heroku login
-- [] heroku create "App Name"
-- [] git remote -v
 - [] setup env vars in GUI
-- [] git push heroku master/main
